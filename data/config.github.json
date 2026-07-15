@@ -94,9 +94,15 @@
         "developer",
         "devtool",
         "coding",
-        "machine learning"
+        "machine learning",
+        "code",
+        "cli",
+        "tool",
+        "framework",
+        "sdk",
+        "api"
       ],
-      "min_stars": 5,
+      "min_stars": 1,
       "max_items": 10,
       "category": "github-hot"
     },
