@@ -15,114 +15,138 @@
     "enrichment_concurrency": 2
   },
   "sources": {
-    "github": [
-      {
-        "type": "repo_releases",
-        "owner": "openai",
-        "repo": "openai-python",
-        "enabled": true
-      },
-      {
-        "type": "repo_releases",
-        "owner": "huggingface",
-        "repo": "transformers",
-        "enabled": true
-      },
-      {
-        "type": "repo_releases",
-        "owner": "vllm-project",
-        "repo": "vllm",
-        "enabled": true
-      },
-      {
-        "type": "repo_releases",
-        "owner": "ollama",
-        "repo": "ollama",
-        "enabled": true
-      }
-    ],
+    "github": [],
     "hackernews": {
-      "enabled": true,
-      "fetch_top_stories": 30,
-      "min_score": 100
+      "enabled": false
     },
-    "rss": [
-      {
-        "name": "OpenAI News",
-        "url": "https://openai.com/news/rss.xml",
-        "enabled": true,
-        "category": "ai-labs"
-      },
-      {
-        "name": "Hugging Face Blog",
-        "url": "https://huggingface.co/blog/feed.xml",
-        "enabled": true,
-        "category": "open-source-ai"
-      },
-      {
-        "name": "Simon Willison",
-        "url": "https://simonwillison.net/atom/everything/",
-        "enabled": true,
-        "category": "ai-tools"
-      },
-      {
-        "name": "Google AI Blog",
-        "url": "https://blog.google/technology/ai/rss/",
-        "enabled": true,
-        "category": "ai-labs"
-      },
-      {
-        "name": "GitHub Trending - Daily",
-        "url": "https://mshibanami.github.io/GitHubTrendingRSS/daily/all.xml",
-        "enabled": true,
-        "category": "github-trending"
-      }
-    ],
+    "rss": [],
     "reddit": {
       "enabled": true,
+      "fetch_comments": 3,
       "subreddits": [
         {
           "subreddit": "MachineLearning",
           "enabled": true,
           "sort": "hot",
           "time_filter": "day",
-          "fetch_limit": 15,
-          "min_score": 40
+          "fetch_limit": 8,
+          "min_score": 10,
+          "category": "reddit-hot"
         },
         {
           "subreddit": "LocalLLaMA",
           "enabled": true,
           "sort": "hot",
           "time_filter": "day",
-          "fetch_limit": 15,
-          "min_score": 40
+          "fetch_limit": 8,
+          "min_score": 10,
+          "category": "reddit-hot"
+        },
+        {
+          "subreddit": "artificial",
+          "enabled": true,
+          "sort": "hot",
+          "time_filter": "day",
+          "fetch_limit": 8,
+          "min_score": 10,
+          "category": "reddit-hot"
+        },
+        {
+          "subreddit": "programming",
+          "enabled": true,
+          "sort": "hot",
+          "time_filter": "day",
+          "fetch_limit": 8,
+          "min_score": 10,
+          "category": "reddit-hot"
+        },
+        {
+          "subreddit": "technology",
+          "enabled": true,
+          "sort": "hot",
+          "time_filter": "day",
+          "fetch_limit": 8,
+          "min_score": 10,
+          "category": "reddit-hot"
+        },
+        {
+          "subreddit": "opensource",
+          "enabled": true,
+          "sort": "hot",
+          "time_filter": "day",
+          "fetch_limit": 8,
+          "min_score": 10,
+          "category": "reddit-hot"
         }
       ],
-      "users": [],
-      "fetch_comments": 5
+      "users": []
+    },
+    "ossinsight": {
+      "enabled": true,
+      "period": "past_24_hours",
+      "languages": [
+        "All"
+      ],
+      "keywords": [
+        "ai",
+        "llm",
+        "agent",
+        "developer",
+        "devtool",
+        "coding",
+        "machine learning"
+      ],
+      "min_stars": 5,
+      "max_items": 10,
+      "category": "github-hot"
+    },
+    "twitter": {
+      "enabled": true,
+      "users": [
+        "OpenAI",
+        "AnthropicAI",
+        "GoogleDeepMind",
+        "huggingface",
+        "karpathy"
+      ],
+      "fetch_limit": 100,
+      "category": "x-hot",
+      "fetch_reply_text": false,
+      "max_replies_per_tweet": 0,
+      "max_tweets_to_expand": 0,
+      "reply_min_likes": 0,
+      "apify_token_env": "APIFY_TOKEN"
     }
   },
   "filtering": {
-    "ai_score_threshold": 7.0,
+    "ai_score_threshold": 0.0,
     "time_window_hours": 24,
-    "max_items": 15,
+    "max_items": 25,
     "category_groups": {
-      "ai_labs": {
+      "reddit": {
+        "name": "Reddit ??",
         "limit": 5,
         "categories": [
-          "ai-labs"
+          "reddit-hot"
         ]
       },
-      "open_source": {
-        "limit": 5,
+      "github": {
+        "name": "GitHub ????",
+        "limit": 10,
         "categories": [
-          "open-source-ai",
-          "ai-tools"
+          "github-hot"
+        ]
+      },
+      "twitter": {
+        "name": "X ??",
+        "limit": 10,
+        "categories": [
+          "x-hot"
         ]
       }
     },
     "default_group": "other",
-    "default_group_limit": 5
+    "default_group_limit": 1
   },
   "webhook": {
     "enabled": false
