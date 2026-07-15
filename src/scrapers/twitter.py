@@ -68,12 +68,24 @@ class TwitterScraper(BaseScraper):
     async def _start_run(
         self, token: str, users: List[str]
     ) -> tuple[Optional[str], Optional[str]]:
-        payload = {
-            "source_mode": "profiles",
-            "profile_urls": users,
-            "search_sort": "Latest",
-            "max_items": max(100, self.config.fetch_limit),
-        }
+        if self.config.actor_id == "fastdata~twitter-scraper":
+            payload = {
+                "twitterHandles": users,
+                "mode": "tweets",
+                "maxTweets": max(100, self.config.fetch_limit),
+                "maxTweetsPerAccount": max(10, self.config.fetch_limit // len(users)),
+                "sinceDate": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+                "includeReplies": False,
+                "includeRetweets": True,
+                "deduplicate": True,
+            }
+        else:
+            payload = {
+                "source_mode": "profiles",
+                "profile_urls": users,
+                "search_sort": "Latest",
+                "max_items": max(100, self.config.fetch_limit),
+            }
         url = f"{_APIFY_BASE}/acts/{self.config.actor_id}/runs?token={token}"
         try:
             resp = await self.client.post(url, json=payload, timeout=30.0)
@@ -226,7 +238,7 @@ class TwitterScraper(BaseScraper):
 
     def _parse_item(self, item: dict, since: datetime) -> Optional[ContentItem]:
         try:
-            created_at_str = item.get("created_at")
+            created_at_str = item.get("created_at") or item.get("createdAt")
             if not created_at_str:
                 return None
 
@@ -260,7 +272,7 @@ class TwitterScraper(BaseScraper):
                 or numeric_id
             )
 
-            user = item.get("user") or {}
+            user = item.get("user") or item.get("author") or {}
             screen_name = (
                 user.get("screen_name")
                 or user.get("username")
@@ -269,7 +281,7 @@ class TwitterScraper(BaseScraper):
                 or item.get("username")
                 or "unknown"
             )
-            author = user.get("name") or screen_name
+            author = user.get("name") or user.get("displayName") or screen_name
 
             text = item.get("full_text") or item.get("text") or ""
             if not text:
@@ -299,10 +311,10 @@ class TwitterScraper(BaseScraper):
                 metadata={
                     "tweet_id": numeric_id,
                     "conversation_id": conversation_id,
-                    "favorite_count": item.get("favorite_count", 0),
-                    "retweet_count": item.get("retweet_count", 0),
-                    "reply_count": item.get("reply_count", 0),
-                    "view_count": item.get("view_count"),
+                    "favorite_count": item.get("favorite_count", item.get("likeCount", 0)),
+                    "retweet_count": item.get("retweet_count", item.get("retweetCount", 0)),
+                    "reply_count": item.get("reply_count", item.get("replyCount", 0)),
+                    "view_count": item.get("view_count", item.get("viewCount")),
                     "is_reply": item.get("is_reply", False),
                     "in_reply_to_status_id": item.get("in_reply_to_status_id"),
                     "in_reply_to_screen_name": item.get("in_reply_to_screen_name"),

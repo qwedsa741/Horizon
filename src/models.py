@@ -273,7 +273,7 @@ class TwitterConfig(BaseModel):
     reply_min_likes: int = 0
     # Apify settings (used when mode == "apify")
     apify_token_env: str = "APIFY_TOKEN"
-    actor_id: str = "altimis~scweet"
+    actor_id: str = "fastdata~twitter-scraper"
     # Playwright settings (used when mode == "playwright")
     cookie_dir: str = "data"
     cookie_file_pattern: str = "x_cookies_*.json"
