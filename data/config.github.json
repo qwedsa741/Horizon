@@ -110,6 +110,7 @@
       "enabled": true,
       "users": [
         "OpenAI",
+        "ChatGPTapp",
         "AnthropicAI",
         "GoogleDeepMind",
         "huggingface",
